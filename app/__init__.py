@@ -2,8 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
-from app.routes.main import main_bp
-from app.routes.auth import auth_bp
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -20,6 +18,10 @@ def create_app():
     login_manager.init_app(app)
     bcrypt.init_app(app)
     login_manager.login_view = "auth.login"
+
+    # Import blueprints here to avoid circular imports
+    from app.routes.main import main_bp
+    from app.routes.auth import auth_bp
 
     # Register Blueprints
     app.register_blueprint(main_bp)
