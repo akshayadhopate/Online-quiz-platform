@@ -2,16 +2,40 @@
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <h2 class="text-2xl font-bold text-center mb-6">Available Quizzes</h2>
-    {% if quizzes %}
+    <div class="mb-4">
+        <form method="GET" action="{{ url_for('quiz.available_quizzes') }}">
+            <label for="category" class="mr-2">Filter by Category:</label>
+            <select name="category" id="category" class="px-3 py-2 border rounded">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if request.args.get('category') == category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-2">Filter</button>
+        </form>
+    </div>
+    {% if quizzes.items %}
         <ul class="space-y-4">
-            {% for quiz in quizzes %}
+            {% for quiz in quizzes.items %}
                 <li class="bg-white p-4 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold">{{ quiz.title }}</h3>
+                    <p class="text-gray-600">Category: {{ quiz.category or "None" }}</p>
                     <p class="text-gray-600">{{ quiz.description or "No description" }}</p>
                     <a href="{{ url_for('quiz.take_quiz', quiz_id=quiz.id) }}" class="text-blue-600 hover:underline">Take Quiz</a>
+                    <a href="{{ url_for('quiz.leaderboard', quiz_id=quiz.id) }}" class="text-blue-600 hover:underline ml-4">View Leaderboard</a>
                 </li>
             {% endfor %}
         </ul>
+        {% if quizzes.has_prev or quizzes.has_next %}
+            <div class="mt-6 flex justify-center space-x-4">
+                {% if quizzes.has_prev %}
+                    <a href="{{ url_for('quiz.available_quizzes', page=quizzes.prev_num, category=request.args.get('category')) }}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-grain-700">Previous</a>
+                {% endif %}
+                {% if quizzes.has_next %}
+                    <a href="{{ url_for('quiz.available_quizzes', page=quizzes.next_num, category=request.args.get('category')) }}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Next</a>
+                {% endif %}
+            </div>
+        {% endif %}
     {% else %}
         <p class="text-gray-600 text-center">No quizzes available yet.</p>
     {% endif %}

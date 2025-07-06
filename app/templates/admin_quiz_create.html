@@ -22,6 +22,15 @@
                 {% endfor %}
             {% endif %}
         </div>
+        <div class="mb-4">
+            {{ form.category.label(class="block text-gray-700") }}
+            {{ form.category(class="w-full px-3 py-2 border rounded") }}
+            {% if form.category.errors %}
+                {% for error in form.category.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="text-center">
             {{ form.submit(class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700") }}
         </div>

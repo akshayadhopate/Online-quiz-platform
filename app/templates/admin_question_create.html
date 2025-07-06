@@ -35,46 +35,42 @@
                 {% endfor %}
             {% endif %}
         </div>
-
-        <div id="mcq-options">
-            <div class="mb-4">
-                {{ form.option1.label(class="block text-gray-700") }}
-                {{ form.option1(class="w-full px-3 py-2 border rounded") }}
-                {% if form.option1.errors %}
-                    {% for error in form.option1.errors %}
-                        <span class="text-red-500 text-sm">{{ error }}</span>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <div class="mb-4">
-                {{ form.option2.label(class="block text-gray-700") }}
-                {{ form.option2(class="w-full px-3 py-2 border rounded") }}
-                {% if form.option2.errors %}
-                    {% for error in form.option2.errors %}
-                        <span class="text-red-500 text-sm">{{ error }}</span>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <div class="mb-4">
-                {{ form.option3.label(class="block text-gray-700") }}
-                {{ form.option3(class="w-full px-3 py-2 border rounded") }}
-                {% if form.option3.errors %}
-                    {% for error in form.option3.errors %}
-                        <span class="text-red-500 text-sm">{{ error }}</span>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <div class="mb-4">
-                {{ form.option4.label(class="block text-gray-700") }}
-                {{ form.option4(class="w-full px-3 py-2 border rounded") }}
-                {% if form.option4.errors %}
-                    {% for error in form.option4.errors %}
-                        <span class="text-red-500 text-sm">{{ error }}</span>
-                    {% endfor %}
-                {% endif %}
-            </div>
+        <div class="mb-4">
+            {{ form.option1.label(class="block text-gray-700") }}
+            {{ form.option1(class="w-full px-3 py-2 border rounded") }}
+            {% if form.option1.errors %}
+                {% for error in form.option1.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
         </div>
-
+        <div class="mb-4">
+            {{ form.option2.label(class="block text-gray-700") }}
+            {{ form.option2(class="w-full px-3 py-2 border rounded") }}
+            {% if form.option2.errors %}
+                {% for error in form.option2.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            {{ form.option3.label(class="block text-gray-700") }}
+            {{ form.option3(class="w-full px-3 py-2 border rounded") }}
+            {% if form.option3.errors %}
+                {% for error in form.option3.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            {{ form.option4.label(class="block text-gray-700") }}
+            {{ form.option4(class="w-full px-3 py-2 border rounded") }}
+            {% if form.option4.errors %}
+                {% for error in form.option4.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="mb-4">
             {{ form.correct_answer.label(class="block text-gray-700") }}
             {{ form.correct_answer(class="w-full px-3 py-2 border rounded") }}
