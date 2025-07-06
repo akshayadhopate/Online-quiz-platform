@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold text-center mb-6">Available Quizzes</h2>
+    {% if quizzes %}
+        <ul class="space-y-4">
+            {% for quiz in quizzes %}
+                <li class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold">{{ quiz.title }}</h3>
+                    <p class="text-gray-600">{{ quiz.description or "No description" }}</p>
+                    <a href="{{ url_for('quiz.take_quiz', quiz_id=quiz.id) }}" class="text-blue-600 hover:underline">Take Quiz</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-600 text-center">No quizzes available yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

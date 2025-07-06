@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required, current_user
 from app import db
 from app.models import Quiz, Question
@@ -81,6 +81,64 @@ def create_question(quiz_id):
         flash("Please fix the errors in the form.", "danger")
 
     return render_template("admin_question_create.html", form=form, quiz=quiz)
+
+@quiz_bp.route("/quizzes")
+@login_required
+def available_quizzes():
+    quizzes = Quiz.query.all()
+    return render_template("quiz_list.html", quizzes=quizzes)
+
+@quiz_bp.route("/quiz/<int:quiz_id>/take", methods=["GET", "POST"])
+@login_required
+def take_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+    if not quiz.questions:
+        flash("This quiz has no questions yet.", "danger")
+        return redirect(url_for("quiz.available_quizzes"))
+
+    # Initialize session for answers and question index
+    if "quiz_answers" not in session or session["quiz_id"] != quiz_id:
+        session["quiz_id"] = quiz_id
+        session["quiz_answers"] = {}
+        session["current_question"] = 0
+        session["timer_start"] = 0  # Placeholder for timer (seconds)
+
+    current_question_index = session["current_question"]
+    questions = quiz.questions
+    if current_question_index >= len(questions):
+        return redirect(url_for("quiz.submit_quiz", quiz_id=quiz_id))
+
+    question = questions[current_question_index]
+
+    if request.method == "POST":
+        answer = request.form.get("answer")
+        if answer:
+            session["quiz_answers"][str(question.id)] = answer
+            session["current_question"] += 1
+            session.modified = True
+        if "next" in request.form and session["current_question"] < len(questions):
+            return redirect(url_for("quiz.take_quiz", quiz_id=quiz_id))
+        elif "submit" in request.form:
+            return redirect(url_for("quiz.submit_quiz", quiz_id=quiz_id))
+
+    return render_template(
+        "take_quiz.html",
+        quiz=quiz,
+        question=question,
+        question_number=current_question_index + 1,
+        total_questions=len(questions)
+    )
+
+@quiz_bp.route("/quiz/<int:quiz_id>/submit")
+@login_required
+def submit_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+    answers = session.get("quiz_answers", {})
+    session.pop("quiz_answers", None)
+    session.pop("quiz_id", None)
+    session.pop("current_question", None)
+    session.pop("timer_start", None)
+    return render_template("quiz_submitted.html", quiz=quiz)
 
 # @quiz_bp.route("/admin/quiz/<int:quiz_id>/question/create", methods=["GET", "POST"])
 # @login_required
