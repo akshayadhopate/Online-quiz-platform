@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold text-center mb-6">Results for {{ quiz.title }}</h2>
+    <p class="text-center text-lg mb-4">Your Score: {{ attempt.score }} / {{ questions | length }}</p>
+    <ul class="space-y-6">
+        {% for question in questions %}
+            <li class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold">{{ question.text }}</h3>
+                <p class="text-gray-600">Type: {{ question.type }}</p>
+                {% if question.type == "MCQ" %}
+                    <p class="text-gray-600">Options: {{ question.options | join(", ") }}</p>
+                {% endif %}
+                <p class="text-gray-600">Correct Answer: {{ question.correct_answer }}</p>
+                <p class="text-gray-600">
+                    Your Answer: {{ attempt.answers.get(question.id|string, 'Not answered') }}
+                </p>
+                <p class="{% if attempt.answers.get(question.id|string) == question.correct_answer %}text-green-600{% else %}text-red-600{% endif %}">
+                    {% if attempt.answers.get(question.id|string) == question.correct_answer %}
+                        Correct
+                    {% else %}
+                        Incorrect
+                    {% endif %}
+                </p>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="text-center mt-6">
+        <a href="{{ url_for('quiz.available_quizzes') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Quizzes</a>
+    </div>
+</div>
+{% endblock %}

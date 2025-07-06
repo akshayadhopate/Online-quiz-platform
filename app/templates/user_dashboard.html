@@ -7,5 +7,22 @@
         <h3 class="text-xl font-semibold">Available Quizzes</h3>
         <a href="{{ url_for('quiz.available_quizzes') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">View Quizzes</a>
     </div>
+    <div class="mt-6">
+        <h3 class="text-xl font-semibold">Past Attempts</h3>
+        {% if current_user.attempts %}
+            <ul class="space-y-4 mt-4">
+                {% for attempt in current_user.attempts %}
+                    <li class="bg-white p-4 rounded-lg shadow-md">
+                        <p>Quiz: {{ attempt.quiz.title }}</p>
+                        <p>Score: {{ attempt.score }} / {{ attempt.quiz.questions | length }}</p>
+                        <p>Taken: {{ attempt.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        <a href="{{ url_for('quiz.view_results', attempt_id=attempt.id) }}" class="text-blue-600 hover:underline">View Results</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-600">No attempts yet.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

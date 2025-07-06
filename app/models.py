@@ -32,3 +32,15 @@ class Question(db.Model):
 
     def __repr__(self):
         return f"<Question {self.text}>"
+
+class Attempt(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    quiz_id = db.Column(db.Integer, db.ForeignKey("quiz.id"), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    answers = db.Column(db.JSON, nullable=False)  # {question_id: user_answer}
+    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    quiz = db.relationship("Quiz", backref="attempts")
+
+    def __repr__(self):
+        return f"<Attempt User:{self.user_id} Quiz:{self.quiz_id} Score:{self.score}>"

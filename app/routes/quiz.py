@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required, current_user
 from app import db
-from app.models import Quiz, Question
+from app.models import Quiz, Question, Attempt
 from app.forms import QuizForm, QuestionForm
+from datetime import datetime
 
 quiz_bp = Blueprint("quiz", __name__)
 
@@ -134,11 +135,57 @@ def take_quiz(quiz_id):
 def submit_quiz(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
     answers = session.get("quiz_answers", {})
+    if not answers:
+        flash("No answers submitted.", "danger")
+        return redirect(url_for("quiz.available_quizzes"))
+
+    # Calculate score
+    score = 0
+    questions = quiz.questions
+    for question in questions:
+        user_answer = answers.get(str(question.id))
+        if user_answer and user_answer == question.correct_answer:
+            score += 1
+
+    # Store attempt
+    attempt = Attempt(
+        user_id=current_user.id,
+        quiz_id=quiz.id,
+        score=score,
+        answers=answers
+    )
+    db.session.add(attempt)
+    db.session.commit()
+
+    # Clear session
     session.pop("quiz_answers", None)
     session.pop("quiz_id", None)
     session.pop("current_question", None)
     session.pop("timer_start", None)
-    return render_template("quiz_submitted.html", quiz=quiz)
+
+    return redirect(url_for("quiz.view_results", attempt_id=attempt.id))
+
+@quiz_bp.route("/results/<int:attempt_id>")
+@login_required
+def view_results(attempt_id):
+    attempt = Attempt.query.get_or_404(attempt_id)
+    if attempt.user_id != current_user.id:
+        flash("Access denied.", "danger")
+        return redirect(url_for("main.home"))
+    quiz = attempt.quiz
+    questions = quiz.questions
+    return render_template("results.html", attempt=attempt, quiz=quiz, questions=questions)
+
+# @quiz_bp.route("/quiz/<int:quiz_id>/submit")
+# @login_required
+# def submit_quiz(quiz_id):
+#     quiz = Quiz.query.get_or_404(quiz_id)
+#     answers = session.get("quiz_answers", {})
+#     session.pop("quiz_answers", None)
+#     session.pop("quiz_id", None)
+#     session.pop("current_question", None)
+#     session.pop("timer_start", None)
+#     return render_template("quiz_submitted.html", quiz=quiz)
 
 # @quiz_bp.route("/admin/quiz/<int:quiz_id>/question/create", methods=["GET", "POST"])
 # @login_required
