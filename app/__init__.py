@@ -22,10 +22,12 @@ def create_app():
     # Import blueprints here to avoid circular imports
     from app.routes.main import main_bp
     from app.routes.auth import auth_bp
-
+    from app.routes.quiz import quiz_bp
+    
     # Register Blueprints
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(quiz_bp)
 
     # Create database tables
     with app.app_context():

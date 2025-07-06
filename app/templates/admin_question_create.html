@@ -1,0 +1,102 @@
+{% if form.errors %}
+<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <strong class="font-bold">Errors:</strong>
+    <ul class="list-disc list-inside">
+    {% for field, errors in form.errors.items() %}
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center mb-6">Add Question to {{ quiz.title }}</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="mb-4">
+            {{ form.text.label(class="block text-gray-700") }}
+            {{ form.text(class="w-full px-3 py-2 border rounded") }}
+            {% if form.text.errors %}
+                {% for error in form.text.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            {{ form.type.label(class="block text-gray-700") }}
+            {{ form.type(class="w-full px-3 py-2 border rounded", onchange="toggleMCQOptions()") }}
+            {% if form.type.errors %}
+                {% for error in form.type.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div id="mcq-options">
+            <div class="mb-4">
+                {{ form.option1.label(class="block text-gray-700") }}
+                {{ form.option1(class="w-full px-3 py-2 border rounded") }}
+                {% if form.option1.errors %}
+                    {% for error in form.option1.errors %}
+                        <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mb-4">
+                {{ form.option2.label(class="block text-gray-700") }}
+                {{ form.option2(class="w-full px-3 py-2 border rounded") }}
+                {% if form.option2.errors %}
+                    {% for error in form.option2.errors %}
+                        <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mb-4">
+                {{ form.option3.label(class="block text-gray-700") }}
+                {{ form.option3(class="w-full px-3 py-2 border rounded") }}
+                {% if form.option3.errors %}
+                    {% for error in form.option3.errors %}
+                        <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mb-4">
+                {{ form.option4.label(class="block text-gray-700") }}
+                {{ form.option4(class="w-full px-3 py-2 border rounded") }}
+                {% if form.option4.errors %}
+                    {% for error in form.option4.errors %}
+                        <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {{ form.correct_answer.label(class="block text-gray-700") }}
+            {{ form.correct_answer(class="w-full px-3 py-2 border rounded") }}
+            {% if form.correct_answer.errors %}
+                {% for error in form.correct_answer.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="text-center">
+            {{ form.submit(class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700") }}
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleMCQOptions() {
+        const typeSelect = document.querySelector("select[name='type']");
+        const mcqOptions = document.getElementById("mcq-options");
+        mcqOptions.style.display = (typeSelect.value === "MCQ") ? "block" : "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", toggleMCQOptions);
+</script>
+{% endblock %}

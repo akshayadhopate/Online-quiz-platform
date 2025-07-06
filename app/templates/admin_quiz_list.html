@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold text-center mb-6">Your Quizzes</h2>
+    <a href="{{ url_for('quiz.create_quiz') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4">Create New Quiz</a>
+    {% if quizzes %}
+        <ul class="space-y-4">
+            {% for quiz in quizzes %}
+                <li class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold">{{ quiz.title }}</h3>
+                    <p class="text-gray-600">{{ quiz.description or "No description" }}</p>
+                    <a href="{{ url_for('quiz.list_questions', quiz_id=quiz.id) }}" class="text-blue-600 hover:underline">Manage Questions</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-600 text-center">No quizzes created yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
