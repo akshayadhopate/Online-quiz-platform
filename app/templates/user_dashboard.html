@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h2 class="text-2xl font-bold text-center mb-6">User Dashboard</h2>
+    <p class="text-center">Welcome, {{ current_user.email }}! Here you can view and take quizzes.</p>
+    <!-- Placeholder for quiz list -->
+    <div class="mt-6">
+        <h3 class="text-xl font-semibold">Available Quizzes</h3>
+        <p class="text-gray-600">Quizzes will be listed here soon.</p>
+    </div>
+</div>
+{% endblock %}
